@@ -42,6 +42,7 @@
                                        placeholder="Digite seu CPF" 
                                        matInput 
                                        [(ngModel)]="cliente.cpf"
+                                       mask="000.000.000-00"
                                        name="cpf" />
                             </mat-form-field>
                         </div>
@@ -55,21 +56,52 @@
                                        placeholder="Digite sua Data de Nascimento" 
                                        matInput
                                        [(ngModel)]="cliente.dataNascimento"
+                                       mask="00/00/0000"
                                        name="dataNascimento" />
                             </mat-form-field>
                         </div>
                     </div>
 
+                    <div fxLayout="row" fxLaoytAlign="start" fxLayoutGap="16px">
+                        <div fxLayout="column" fxFlex="250px">
+                            <mat-form-field class="full-width">
+                                <mat-label>UF: *</mat-label>
+                                <mat-select [(value)]="cliente.estado" (selectionChange)="carregarMunicipios($event)">
+                                    <mat-option *ngFor="let uf of listaDeEstados" [value]="uf.sigla">
+                                        {{ uf.sigla }} - {{ uf.nome }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div fxLayout="row" fxLaoytAlign="start" fxLayoutGap="16px">
+                        <div fxLayout="column" fxFlex="250px">
+                            <mat-form-field class="full-width">
+                                <mat-label>Município: *</mat-label>
+                                <mat-select [(value)]="cliente.municipio">
+                                    <mat-option *ngFor="let m of listaDeMunicipios" [value]="m.nome">
+                                        {{ m.nome }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+
                 </mat-card-content>
                 <mat-card-actions>
-                    <button mat-flat-button color="primary" type="submit">
-                        <mat-icon fontIcon="save"></mat-icon>
-                        Salvar
-                    </button>
-                    <button mat-flat-button color="primary">
-                        <mat-icon fontIcon="refresh"></mat-icon>
-                        Atualizar
-                    </button>
+                    @if (!atualizando) {
+                        <button mat-flat-button color="primary" type="submit">
+                            <mat-icon fontIcon="save"></mat-icon>
+                            Salvar
+                        </button>
+                    } @else {
+                        <button mat-flat-button color="primary">
+                            <mat-icon fontIcon="refresh"></mat-icon>
+                            Atualizar
+                        </button>
+                    }
                     <button mat-flat-button color="accent" class="ml-5">
                         <mat-icon fontIcon="backspace"></mat-icon>
                         Limpar

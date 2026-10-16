@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input'
 import { MatCardModule } from '@angular/material/card'
@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { ClienteService } from '../cliente.service';
 import { Cliente } from '../cadastro/cliente';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar'
 
 @Component({
   selector: 'app-consulta',
@@ -26,13 +27,15 @@ import { Router } from '@angular/router';
     CommonModule
 ],
   templateUrl: './consulta.component.html',
-  styleUrl: './consulta.component.scss'
+  styleUrl: './consulta.component.scss',
 })
 export class ConsultaComponent implements OnInit {
 
   nomeBusca: string = '';
   listaCliente: Cliente[] = [];
   colunasTable: string[] = ["id", "nome", "cpf", "dataNascimento", "email", "acoes"]
+  deletando: boolean = false;
+  snack: MatSnackBar = inject(MatSnackBar)
 
   constructor(
     private service: ClienteService,
@@ -51,5 +54,20 @@ export class ConsultaComponent implements OnInit {
   preparaEditar(id: string){
     this.router.navigate(['/cadastro'], { queryParams: { "id" : id } })
   }
+
+  preparaDeletar(cliente: Cliente){
+    cliente.deletando = true;
+  }
+
+  deletar(cliente: Cliente){
+    this.service.deletar(cliente);
+    this.listaCliente = this.service.pesquisarClientes('');
+    this.mostrarMensagem('Cliente foi deletado com sucesso!')
+  }
+
+  mostrarMensagem(mensagem: string){
+    this.snack.open(mensagem, "Ok")
+  }
 }
+
  
